@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN">  
+<html lang="zh-CN">
 <head>
-  <img src="https://count.getloli.com/@my-gay-website?theme=booru-lewd&padding=7&offset=0&align=top&scale=1&pixelated=1&darkmode=auto" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#f4f1ec" />
@@ -16,6 +15,7 @@
       margin: 0;
       min-height: 100svh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 24px 18px;
@@ -154,6 +154,35 @@
       font-size: 11px;
       color: #b6afaa;
     }
+
+    .site-footer {
+      margin-top: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+    }
+    .site-footer .license {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      line-height: 1.5;
+      color: #b6afaa;
+      text-decoration: none;
+    }
+    .site-footer .license:hover span { color: #8b8480; text-decoration: underline; }
+    .site-footer .license img {
+      display: block;
+      width: 88px;
+      height: 31px;
+      border-radius: 3px;
+    }
+    .site-footer .counter {
+      display: block;
+      image-rendering: pixelated;
+    }
     .sr-only {
       position: absolute;
       width: 1px;
@@ -214,21 +243,46 @@
       <button id="againBtn" class="ghost" type="button">再测一个</button>
     </section>
 
-    <p class="footnote">十分真实，毫无差错</p>
+    <p class="footnote">纯属娱乐 · 结果没有任何科学依据</p>
   </main>
+
+  <footer class="site-footer">
+    <img
+      class="counter"
+      src="https://count.getloli.com/@my-gay-website?theme=booru-lewd&padding=7&offset=0&align=top&scale=1&pixelated=1&darkmode=auto"
+      alt="网站访问计数"
+      loading="lazy"
+    />
+    <a
+      class="license"
+      href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
+      target="_blank"
+      rel="license noopener noreferrer"
+    >
+      <img
+        src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"
+        alt="知识共享 署名-非商业性使用-相同方式共享 4.0 国际许可协议"
+        width="88"
+        height="31"
+        loading="lazy"
+      />
+      <span>本站内容采用 CC BY-NC-SA 4.0 协议</span>
+    </a>
+  </footer>
 
   <script>
     // ==================== 可修改配置 ====================
     // 只有下面名单里的名字会显示「不是 Gay」，其余任何名字都显示「是 Gay」。
     // 可以写多个，精确匹配（忽略大小写和首尾空格）。
     const EXEMPT_NAMES = [
-       'xly',
-       '谢璐阳',
-      '坤总',
+      '谢璐阳',
+      'xly',
       'xieluyang',
-      '谢璐坤',
+      '坤总',
+      '谢ly',
       '牛毅豪',
-      'nyh'
+      'nyh',
+      'XLY'
     ];
 
     // 进度条总时长（毫秒）
@@ -258,9 +312,9 @@
     ];
 
     const GAY_DETAILS = [
-      '鉴定完成：gay值 99.9%，系统判定无需复检。',
+      '鉴定完成：彩虹值 99.9%，系统判定无需复检。',
       '鉴定完成：雷达疯狂作响，根本藏不住。',
-      '鉴定完成：检测到强烈gay信号，建议直接承认。',
+      '鉴定完成：检测到强烈彩虹信号，建议直接承认。',
       '鉴定完成：结果明确，此人 Gay 得很标准。',
     ];
 
