@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f1ec" />
+  <meta name="description" content="输入姓名，一键科学鉴定对方是不是 Gay。纯属娱乐。" />
+  <title>Gay 鉴定器</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%88%3C/text%3E%3C/svg%3E" />
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 18px;
+      background: radial-gradient(circle at 20% 0%, #ffffff 0%, #f4f1ec 55%);
+      color: #1e1b19;
+      font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    [hidden] { display: none !important; }
+
+    .card {
+      width: 100%;
+      max-width: 380px;
+      background: #fff;
+      border-radius: 22px;
+      padding: 30px 24px 18px;
+      box-shadow: 0 10px 30px rgba(40, 30, 20, .08), 0 2px 6px rgba(40, 30, 20, .04);
+    }
+    .head { margin-bottom: 22px; }
+    h1 { margin: 0 0 6px; font-size: 26px; letter-spacing: .5px; }
+    .sub { margin: 0; font-size: 13px; color: #8b8480; }
+
+    input {
+      width: 100%;
+      height: 50px;
+      padding: 0 14px;
+      border: 1.5px solid #e7e1db;
+      border-radius: 12px;
+      background: #fdfcfb;
+      font-size: 16px;
+      color: inherit;
+      outline: none;
+      transition: border-color .2s, background .2s;
+    }
+    input::placeholder { color: #b6afaa; }
+    input:focus { border-color: #1e1b19; background: #fff; }
+    input.error { border-color: #e05b5b; animation: shake .35s; }
+
+    @keyframes shake {
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+
+    button { font: inherit; cursor: pointer; border: 0; }
+    .primary {
+      width: 100%;
+      height: 50px;
+      margin-top: 10px;
+      border-radius: 12px;
+      background: #1e1b19;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      transition: transform .15s, opacity .2s;
+    }
+    .primary:active { transform: scale(.985); opacity: .9; }
+
+    .progress-wrap { padding: 6px 0 2px; }
+    .bar {
+      height: 10px;
+      border-radius: 99px;
+      background: #f0ece7;
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      width: 0;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #e40303, #ff8c00, #ffd500, #008026, #004dff, #750787);
+      background-size: 200% 100%;
+      animation: flow 2s linear infinite;
+    }
+    @keyframes flow {
+      from { background-position: 0 0; }
+      to { background-position: 200% 0; }
+    }
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #8b8480;
+    }
+    .percent {
+      font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .result { text-align: center; padding: 8px 0 4px; }
+    .result.in { animation: pop .35s cubic-bezier(.2, .8, .3, 1) both; }
+    @keyframes pop {
+      from { opacity: 0; transform: translateY(8px) scale(.98); }
+      to { opacity: 1; transform: none; }
+    }
+    .emoji { font-size: 46px; line-height: 1; margin-bottom: 10px; }
+    .who {
+      margin: 0 0 6px;
+      font-size: 13px;
+      color: #8b8480;
+      word-break: break-all;
+    }
+    .verdict {
+      margin: 0 0 10px;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #e40303, #ff8c00, #e0b400, #008026, #004dff, #750787);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .verdict.calm { background: none; color: #3f5b48; }
+    .detail {
+      margin: 0 auto 18px;
+      max-width: 300px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #6f6864;
+    }
+    .ghost {
+      width: 100%;
+      height: 44px;
+      border-radius: 12px;
+      background: #f4f1ec;
+      color: #1e1b19;
+      font-size: 14px;
+      transition: background .2s;
+    }
+    .ghost:active { background: #ebe5de; }
+
+    .footnote {
+      margin: 22px 0 0;
+      text-align: center;
+      font-size: 11px;
+      color: #b6afaa;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fill { animation: none; }
+      .result.in { animation: none; }
+      input.error { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <header class="head">
+      <h1>Gay 鉴定器</h1>
+      <p class="sub">输入姓名，一键科学鉴定</p>
+    </header>
+
+    <form id="form">
+      <label class="sr-only" for="name">姓名</label>
+      <input
+        id="name"
+        name="name"
+        type="text"
+        maxlength="20"
+        placeholder="输入要检测的名字"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        enterkeyhint="go"
+        required
+      />
+      <button id="startBtn" class="primary" type="submit">开 始 检 测</button>
+    </form>
+
+    <section id="progressWrap" class="progress-wrap" hidden aria-live="polite">
+      <div class="bar" id="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="fill" id="fill"></div>
+      </div>
+      <div class="meta">
+        <span id="status">正在准备…</span>
+        <span id="percent" class="percent">0%</span>
+      </div>
+    </section>
+
+    <section id="result" class="result" hidden aria-live="polite">
+      <div class="emoji" id="emoji">🌈</div>
+      <p class="who" id="who"></p>
+      <p class="verdict" id="verdict">是 Gay</p>
+      <p class="detail" id="detail"></p>
+      <button id="againBtn" class="ghost" type="button">再测一个</button>
+    </section>
+
+    <p class="footnote">纯属娱乐 · 结果没有任何科学依据</p>
+  </main>
+
+  <script>
+    // ==================== 可修改配置 ====================
+    // 只有下面名单里的名字会显示「不是 Gay」，其余任何名字都显示「是 Gay」。
+    // 可以写多个，精确匹配（忽略大小写和首尾空格）。
+    const EXEMPT_NAMES = [
+      // '张三',
+      // '李四',
+    ];
+
+    // 进度条总时长（毫秒）
+    const DURATION = 2000;
+    // ==================================================
+
+    const form = document.getElementById('form');
+    const input = document.getElementById('name');
+    const progressWrap = document.getElementById('progressWrap');
+    const bar = document.getElementById('bar');
+    const fill = document.getElementById('fill');
+    const statusEl = document.getElementById('status');
+    const percentEl = document.getElementById('percent');
+    const result = document.getElementById('result');
+    const emojiEl = document.getElementById('emoji');
+    const whoEl = document.getElementById('who');
+    const verdictEl = document.getElementById('verdict');
+    const detailEl = document.getElementById('detail');
+    const againBtn = document.getElementById('againBtn');
+
+    const STEPS = [
+      [0, '正在读取姓名笔画…'],
+      [0.18, '正在连接全球 Gay 数据库…'],
+      [0.42, '正在扫描朋友圈照片…'],
+      [0.65, '正在进行彩虹光谱比对…'],
+      [0.88, '正在生成鉴定报告…'],
+    ];
+
+    const GAY_DETAILS = [
+      '鉴定完成：彩虹值 99.9%，系统判定无需复检。',
+      '鉴定完成：雷达疯狂作响，根本藏不住。',
+      '鉴定完成：检测到强烈彩虹信号，建议直接承认。',
+      '鉴定完成：结果明确，此人 Gay 得很标准。',
+    ];
+
+    let running = false;
+    let rafId = 0;
+
+    function isExempt(name) {
+      const key = name.trim().toLowerCase();
+      return EXEMPT_NAMES.some(function (n) {
+        return String(n).trim().toLowerCase() === key;
+      });
+    }
+
+    function setProgress(p) {
+      const width = Math.min(100, p * 100);
+      fill.style.width = width + '%';
+      percentEl.textContent = Math.round(width) + '%';
+      bar.setAttribute('aria-valuenow', String(Math.round(width)));
+
+      let text = STEPS[0][1];
+      for (let i = 0; i < STEPS.length; i++) {
+        if (p >= STEPS[i][0]) text = STEPS[i][1];
+      }
+      if (statusEl.textContent !== text) statusEl.textContent = text;
+    }
+
+    function showResult(name) {
+      running = false;
+      progressWrap.hidden = true;
+
+      const exempt = isExempt(name);
+      emojiEl.textContent = exempt ? '🍃' : '🌈';
+      whoEl.textContent = '「' + name + '」的鉴定结果';
+      verdictEl.textContent = exempt ? '不是 Gay' : '是 Gay';
+      verdictEl.classList.toggle('calm', exempt);
+      detailEl.textContent = exempt
+        ? '鉴定完成：彩虹值 0%，直得不能再直。'
+        : GAY_DETAILS[Math.floor(Math.random() * GAY_DETAILS.length)];
+
+      result.hidden = false;
+      result.classList.remove('in');
+      void result.offsetWidth;
+      result.classList.add('in');
+    }
+
+    function start(name) {
+      if (running) return;
+      running = true;
+      form.hidden = true;
+      result.hidden = true;
+      progressWrap.hidden = false;
+      setProgress(0);
+
+      const t0 = performance.now();
+      const duration = DURATION;
+
+      function frame(now) {
+        const p = Math.min(1, (now - t0) / duration);
+        // 轻微缓动：前段快、后段稳，总时长仍然是 2 秒
+        const eased = 1 - Math.pow(1 - p, 1.6);
+        setProgress(eased);
+        if (p < 1) {
+          rafId = requestAnimationFrame(frame);
+        } else {
+          rafId = 0;
+          setTimeout(function () {
+            showResult(name);
+          }, 150);
+        }
+      }
+
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(frame);
+    }
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      if (running) return;
+
+      const name = input.value.trim();
+      if (!name) {
+        input.value = '';
+        input.placeholder = '先输入一个名字';
+        input.classList.add('error');
+        input.focus();
+        setTimeout(function () {
+          input.classList.remove('error');
+        }, 600);
+        return;
+      }
+      start(name);
+    });
+
+    againBtn.addEventListener('click', function () {
+      result.hidden = true;
+      progressWrap.hidden = true;
+      form.hidden = false;
+      input.value = '';
+      fill.style.width = '0%';
+      percentEl.textContent = '0%';
+      bar.setAttribute('aria-valuenow', '0');
+      statusEl.textContent = STEPS[0][1];
+      input.focus();
+    });
+  </script>
+</body>
+</html>
